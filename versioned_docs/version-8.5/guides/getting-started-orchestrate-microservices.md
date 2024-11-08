@@ -2,7 +2,7 @@
 id: orchestrate-microservices
 title: Get started with microservice orchestration
 sidebar_label: Getting started with microservice orchestration
-description: "Orchestrate Microservices along a business process for visibility and resilience."
+description: "Orchestrate microservices for visibility and resilience."
 keywords: [microservices, orchestration, getting-started]
 ---
 
@@ -19,7 +19,7 @@ While this guide uses code snippets in Java, you do not need to be a Java develo
 ## Prerequisites
 
 - Ensure you have a valid [Camunda 8 account](create-account.md), or sign up if you still need one.
-- Java >= 8
+- Java ≥ 8
 - Maven
 - IDE (IntelliJ, VSCode, or similar)
 - Download and unzip or clone the [repo](https://github.com/camunda/camunda-platform-tutorials), then `cd` into `camunda-platform-tutorials/orchestrate-microservices/worker-java`
@@ -82,7 +82,7 @@ Don't want to build the process yourself? Click this button to create it from a 
       className={clsx(
          "button button--outline button--secondary button--lg"
       )}
-      href="https://modeler.camunda.io/tutorial/quick-start-microservices?utm_source=docs.camunda.io.gettingstarted">
+      href="https://marketplace.camunda.com/en-US/apps/437143/microservice-orchestration-quick-start">
       Open model in Camunda 8
    </a>
    <a

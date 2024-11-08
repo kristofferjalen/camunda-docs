@@ -25,7 +25,7 @@ Optimize provides an API to trigger a backup and retrieve information about a gi
 The following prerequisites must be set up before using the backup API:
 
 1. A snapshot repository of your choice must be registered with Elasticsearch.
-2. The repository name must be specified using the `CAMUNDA_OPTIMIZE_BACKUP_REPOSITORY_NAME` environment variable or by adding it to your Optimize configuration:
+2. The repository name must be specified using the `CAMUNDA_OPTIMIZE_BACKUP_REPOSITORY_NAME` environment variable or by adding it to your Optimize [`environment-config.yaml`]($optimize$/self-managed/optimize-deployment/configuration/system-configuration/):
 
 ```yaml
 backup:
@@ -58,7 +58,7 @@ POST actuator/backups
 
 ### Example request
 
-```
+```shell
 curl --request POST 'http://localhost:8092/actuator/backups' \
 -H 'Content-Type: application/json' \
 -d '{ "backupId": 123456 }'
@@ -68,10 +68,7 @@ curl --request POST 'http://localhost:8092/actuator/backups' \
 
 ```json
 {
-  "scheduledSnapshots": [
-    "camunda_optimize_123456_3.9.0_part_1_of_2",
-    "camunda_optimize_123456_3.9.0_part_2_of_2"
-  ]
+  "message": "Backup creation for ID 123456 has been scheduled. Use the GET API to monitor completion of backup process"
 }
 ```
 
@@ -104,8 +101,8 @@ GET actuator/backup
 
 ### Example request
 
-```
-curl ---request GET 'http://localhost:8092/actuator/backups/123456'
+```shell
+curl --request GET 'http://localhost:8092/actuator/backups/123456'
 ```
 
 ### Example response
@@ -164,8 +161,8 @@ DELETE actuator/backups/{backupId}
 
 ### Example request
 
-```
-curl ---request DELETE 'http://localhost:8092/actuator/backups/123456'
+```shell
+curl --request DELETE 'http://localhost:8092/actuator/backups/123456'
 ```
 
 ## Restore backup
@@ -187,6 +184,6 @@ To restore a given backup, the following steps must be performed:
 
 Example Elasticsearch request:
 
-```
+```shell
 curl --request POST `http://localhost:9200/_snapshot/repository_name/camunda_optimize_123456_3.9.0_part_1_of_2/_restore?wait_for_completion=true`
 ```

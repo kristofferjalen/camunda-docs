@@ -47,9 +47,9 @@ Therefore, if you are not using the [ingress-nginx controller](https://github.co
 
 ## Identity `contextPath`
 
-Camunda 8 Self-Managed can be accessed externally via different methods. One such method is the [combined Ingress setup](self-managed/setup/guides/ingress-setup.md#combined-ingress-setup). In that configuration, Camunda Identity is accessed using a specific path, configured by setting the `contextPath` variable, for example `https://camunda.example.com/identity`.
+Camunda 8 Self-Managed can be accessed externally via the [combined Ingress setup](self-managed/setup/guides/ingress-setup.md#combined-ingress-setup). In that configuration, Camunda Identity is accessed using a specific path, configured by setting the `contextPath` variable, for example `https://camunda.example.com/identity`.
 
-For security reasons, Camunda Identity requires secure access (HTTPS) when a `contextPath` is configured. If you want to use Camunda Identity with HTTP, use a [separate Ingress setup](self-managed/setup/guides/ingress-setup.md#separated-ingress-setup) (applications such as Operate, Optimize, etc, can still be accessed in a combined setup).
+For security reasons, Camunda Identity requires secure access (HTTPS) when a `contextPath` is configured.
 
 :::note
 Due to limitations, the Identity `contextPath` approach is unavailable when using a browser in Incognito mode.
@@ -66,6 +66,25 @@ A gateway timeout can occur if the headers of a response are too big (for exampl
 ## Helm CLI version and installation failures
 
 If you encounter errors during Helm chart installation, such as type mismatches or other template rendering issues, you may be using an outdated version of the Helm CLI. Helm's handling of data types and template syntax can vary significantly between versions. Ensure you use the Helm CLI version `3.13` or higher.
+
+## DNS disruption issue for Zeebe in Kubernetes clusters (1.29-1.31)
+
+Kubernetes clusters running versions 1.29 to 1.31 may experience DNS disruptions during complete node restarts, such as during upgrades or evictions, particularly if the cluster's DNS resolver pods are affected.
+
+This issue is specifically noticeable for Zeebe (Netty), as it will no longer be able to form a cluster because of improper DNS responses. This occurs because Zeebe continues to communicate with a non-existent DNS resolver, caused by improper cleanup of conntrack entries for UDP connections.
+
+Details on this issue can be found in [this Kubernetes issue](https://github.com/kubernetes/kubernetes/issues/125467) and has been resolved in the following patch releases:
+
+- Kubernetes 1.29.10
+- Kubernetes 1.30.6
+- Kubernetes 1.31.2
+
+Kubernetes versions 1.32 and versions before 1.29 are not affected.
+
+If an immediate cluster upgrade to a fixed version is not possible, the following temporary workarounds can be applied if you encounter DNS issues:
+
+- Restart the `kube-proxy` pod(s)
+- Delete the affected Zeebe pod
 
 ## Anomaly detection scripts
 
@@ -91,7 +110,7 @@ cd c8-sm-checks
 
 ### Kubernetes connectivity scripts
 
-These scripts enable you to verify the connectivity and configuration of your Kubernetes cluster, including checks for deployment status, service availability, and ingress configuration.
+These scripts enable you to verify the connectivity and configuration of your Kubernetes cluster, including checks for deployment status, service availability, and Ingress configuration.
 
 #### Kubernetes permissions
 
@@ -100,8 +119,8 @@ When utilizing the anomaly detection scripts within a Kubernetes environment, en
 - **List pods**: Required for `kubectl get pods` to fetch pod details in the namespace.
 - **Execute commands in pods**: Necessary for running commands inside pods via `kubectl exec`.
 - **List services**: Needed for `kubectl get services` to retrieve service information.
-- **List ingresses**: Required by `kubectl get ingress` to obtain ingress objects.
-- **Get ingress details**: Necessary for `kubectl get ingress` to fetch ingress configurations.
+- **List ingresses**: Required by `kubectl get ingress` to obtain Ingress objects.
+- **Get Ingress details**: Necessary for `kubectl get ingress` to fetch Ingress configurations.
 
 #### Deployment check (`./checks/kube/deployment.sh`)
 
@@ -133,6 +152,12 @@ This script verifies connectivity to a Zeebe instance using HTTP/2 and gRPC prot
 
 Find more information on [how to register your application on Identity](https://github.com/camunda-community-hub/camunda-8-examples/blob/main/payment-example-process-application/kube/README.md#4-generating-an-m2m-token-for-our-application).
 
+### IRSA configuration check
+
+The AWS EKS IRSA configuration scripts are focused on verifying the correct setup of IAM Roles for Service Accounts (IRSA) within your Kubernetes deployment on AWS. These scripts ensure that your Kubernetes service accounts are correctly associated with IAM roles, allowing components like PostgreSQL, OpenSearch, and others in your deployment to securely interact with AWS resources.
+
+For detailed usage instructions and setup information, please refer to the [IRSA guide](/self-managed/setup/deploy/amazon/amazon-eks/irsa.md#irsa-check-script).
+
 ### Interpretation of the results
 
 Each script produces an output indicating the status of individual checks, which can be either `[OK]`, which signals a healthy status, or `[FAIL]`, which signals an unhealthy status.
@@ -155,8 +180,8 @@ For example:
 [FAIL] None of the ingresses contain the annotation nginx.ingress.kubernetes.io/backend-protocol: GRPC, which is required for Zeebe ingress.
 ```
 
-The error message suggests adjusting the ingress configuration to include the required annotation. One can also explore the source of the script to have a better understanding of the reason for the failure.
+The error message suggests adjusting the Ingress configuration to include the required annotation. One can also explore the source of the script to have a better understanding of the reason for the failure.
 
 :::note
-Sometimes, some checks may not be applicable to your setup if it's custom (for example, with the previous example the ingress you use may not be [ingress-nginx](https://kubernetes.github.io/ingress-nginx/)).
+Sometimes, some checks may not be applicable to your setup if it's custom (for example, with the previous example the Ingress you use may not be [ingress-nginx](https://kubernetes.github.io/ingress-nginx/)).
 :::

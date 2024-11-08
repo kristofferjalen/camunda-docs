@@ -4,7 +4,7 @@ title: "Using Amazon OpenSearch Service"
 description: "Learn how to use an Amazon OpenSearch Service instance in Camunda 8 Self-Managed deployment."
 ---
 
-Camunda 8 Self-Managed has two different types of components: Camunda components (Operate, Optimize, Tasklist, etc.) and non-Camunda dependency components (such as Keycloak and Elasticsearch). For more details, review the [architecture](/self-managed/platform-architecture/overview.md) documentation for more information on the different types of applications.
+Camunda 8 Self-Managed has two different types of components: Camunda components (Operate, Optimize, Tasklist, etc.) and non-Camunda dependency components (such as Keycloak and Elasticsearch). For more details, review the [architecture](../../about-self-managed.md#architecture) documentation for more information on the different types of applications.
 
 This guide steps through using an existing Amazon OpenSearch Service instance. By default, [Helm chart deployment](/self-managed/setup/overview.md) creates a new Elasticsearch instance, but it's possible to use Amazon OpenSearch Service instead.
 
@@ -12,17 +12,11 @@ This guide steps through using an existing Amazon OpenSearch Service instance. B
 
 ### Authentication
 
-There are two layers of permissions with OpenSearch: AWS IAM and OpenSearch internal. If you would like to connect to OpenSearch using AWS IAM roles for service accounts (IRSA) then please also refer to the [IAM roles for service accounts documentation](/self-managed/setup/deploy/amazon/amazon-eks/irsa.md#OpenSearch).
+There are two layers of permissions with OpenSearch: AWS IAM and OpenSearch internal. If you would like to connect to OpenSearch using AWS IAM roles for service accounts (IRSA) then please also refer to the [IAM roles for service accounts documentation](/self-managed/setup/deploy/amazon/amazon-eks/terraform-setup.md#opensearch-module-setup).
 
 Otherwise, if it is intended to connect to Amazon OpenSearch Service with basic auth, then the example below can be followed:
 
 ## Values file
-
-:::caution
-
-The migration step within Optimize is currently not supported with OpenSearch. Disable the migration as shown in the example below.
-
-:::
 
 The following values can be configured in the Camunda 8 Self-Managed Helm chart in order to use Amazon OpenSearch Service:
 
@@ -42,10 +36,6 @@ global:
       host: opensearch.example.com
       port: 443
 
-optimize:
-  migration:
-    enabled: false
-
 elasticsearch:
   enabled: false
 ```
@@ -56,7 +46,7 @@ If you do not wish to specify the username and password in plaintext within the 
 
 ```yaml
 global:
-  opensearcn:
+  opensearch:
     auth:
       existingSecret: secretName
       existingSecretKey: secretKey

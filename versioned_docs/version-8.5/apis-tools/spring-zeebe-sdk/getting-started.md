@@ -8,35 +8,19 @@ This project allows you to leverage Zeebe APIs ([gRPC](/apis-tools/zeebe-api/grp
 
 ## Version compatibility
 
-| Camunda Spring SDK version | JDK    | Camunda version | Bundled Spring Boot version |
-| -------------------------- | ------ | --------------- | --------------------------- |
-| 8.5.x                      | \>= 17 | 8.5.x           | 3.2.x                       |
+| Camunda Spring SDK version | JDK  | Camunda version | Bundled Spring Boot version |
+| -------------------------- | ---- | --------------- | --------------------------- |
+| 8.5.x                      | ≥ 17 | 8.5.x           | 3.2.x                       |
 
 ## Add the Spring Zeebe SDK to your project
 
-Add the following repository and Maven dependency to your Spring Boot Starter project:
-
-```xml
-<repositories>
-    <repository>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-        <id>identity</id>
-        <name>Camunda Identity</name>
-        <url>https://artifacts.camunda.com/artifactory/camunda-identity/</url>
-    </repository>
-</repositories>
-```
+Add the following Maven dependency to your Spring Boot Starter project, replacing `x` with the latest patch level available:
 
 ```xml
 <dependency>
-  <groupId>io.camunda</groupId>
-  <artifactId>spring-boot-starter-camunda-sdk</artifactId>
-  <version>8.5.0</version>
+    <groupId>io.camunda</groupId>
+    <artifactId>spring-boot-starter-camunda-sdk</artifactId>
+    <version>8.5.x</version>
 </dependency>
 ```
 
@@ -122,6 +106,13 @@ Environment variable to be set using this approach:
 ZEEBE_AUTHORIZATION_SERVER_URL=xxx
 ZEEBE_CLIENT_ID=xxx
 ZEEBE_CLIENT_SECRET=xxx
+```
+
+Example environment variables to be set to configure gRPC and REST connection:
+
+```properties
+ZEEBE_GRPC_ADDRESS=http://127.0.0.1:26500/
+ZEEBE_REST_ADDRESS=http://127.0.0.1:8080/
 ```
 
 Properties to be set using this approach:
