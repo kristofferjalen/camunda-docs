@@ -2579,6 +2579,10 @@ module.exports = {
                   "Install AWS Marketplace",
                   "self-managed/setup/deploy/amazon/aws-marketplace/"
                 ),
+                docsLink(
+                  "Amazon EC2",
+                  "self-managed/setup/deploy/amazon/amazon-ec2/"
+                ),
               ],
             },
 
